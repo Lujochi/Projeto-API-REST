@@ -9,6 +9,7 @@ export default [
   ...tseslint.configs.recommended,
   {
     rules: {
+      "@typescript-eslint/ban-types": "off",
       "@typescript-eslint/no-empty-object-type": "off",
     },
   },
