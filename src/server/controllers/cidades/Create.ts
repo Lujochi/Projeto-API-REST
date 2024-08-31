@@ -1,33 +1,33 @@
 import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
 import * as yup from "yup";
 
-const bodyValidation = yup.object({
-  nome: yup.string().required().min(3),
-});
+import { validation } from "../../shared/middleware";
 
-type ICidade = yup.InferType<typeof bodyValidation>;
+interface ICidades {
+  nome: string;
+  estado: string;
+}
 
-export const create = async (req: Request<{}, {}, ICidade>, res: Response) => {
-  let validatedData: ICidade | undefined = undefined;
+interface IFilter {
+  filter?: string;
+}
 
-  try {
-    validatedData = await bodyValidation.validate(req.body, {
-      abortEarly: false,
-    });
-  } catch (err) {
-    const yupError = err as yup.ValidationError;
-    const errors: Record<string, string> = {};
+export const createValidation = validation((getSchema) => ({
+  body: getSchema<ICidades>(
+    yup.object().shape({
+      nome: yup.string().required().min(3),
+      estado: yup.string().required().min(3),
+    })
+  ),
+  query: getSchema<IFilter>(
+    yup.object().shape({
+      filter: yup.string().required().min(3),
+    })
+  ),
+}));
 
-    yupError.inner.forEach((error) => {
-      if (!error.path) return;
-      errors[error.path] = error.message;
-    });
-
-    return res.status(StatusCodes.BAD_REQUEST).json({ errors });
-  }
-
-  console.log(validatedData);
+export const create = async (req: Request<{}, {}, ICidades>, res: Response) => {
+  console.log(req.body);
 
   return res.send("Create");
 };
