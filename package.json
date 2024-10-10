@@ -5,7 +5,7 @@
   "scripts": {
     "test": "jest",
     "postinstall": "tsc",
-    "porduction": "node ./build/index.js",
+    "production": "node ./build/index.js",
     "dev": "ts-node-dev ./src/index.ts"
   },
   "author": "Luan Jose Chiodini",
